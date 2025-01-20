@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Random väri/gradient generaattori</h2>
+<button type ="button" id="colorBtn" onclick="color()">Paina tästä arpoaksesi random väri</button>
+<button type ="button" id="gradientBtn" onclick="gradient()">Paina tästä arpoaksesi random gradient</button>
+
+
+
+<p id="currentModeText">HEX</p>
+<label class="switch" id="myCheckID">
+  <input type="checkbox" id="myCheck" onclick="toggleColor()" checked>
+  <span class="slider round"></span>
+</label>
+<p id="currentModeTextGradient">HEX</p>
+<label class="switch" id="myCheckID2">
+  <input type="checkbox" id="myCheck3" onclick="toggleHexGradient()" checked>
+  <span class="slider round"></span>
+</label>
+<p id="currentGradientText">LINEAR</p>
+<label class="switch">
+  <input type="checkbox" id="myCheck2" onclick="toggleGradient()" checked>
+  <span class="slider round"></span>
+</label><br><br>
+<button onclick="copy()" id="copyButton">Kopioi väri leikepöydälle</button>
+<div id="hexTextContainer">
+<p id="hexText"></p>
+</div>
+<div id="copyInfoContainer">
+
+<p id="copyInfoText"></p>
+</div>
+<div id="colorBox">
+</div>
+<script>
+document.getElementById("myCheck").disabled =true;
+document.getElementById("myCheck2").disabled =true;
+document.getElementById("copyButton").disabled =true;
+document.getElementById("currentModeTextGradient").style.display = 'none';
+document.getElementById("myCheckID2").style.display = 'none';
+let color1, color2, color3;
+var checkBox = document.getElementById("myCheck");
+var checkBox2 = document.getElementById("myCheck2");
+var checkBox3 = document.getElementById("myCheck3");
+const rgbToHex = (r, g, b) => '#' + [r, g, b]
+    .map(x => x.toString(16).padStart(2, '0')).join('');
+
+function color()
+{
+document.getElementById("myCheckID").style.display = 'inline-block';
+document.getElementById("currentModeText").style.display = 'block';
+document.getElementById("currentModeTextGradient").style.display = 'none';
+document.getElementById("myCheckID2").style.display = 'none';
+document.getElementById("myCheck2").disabled =true;
+document.getElementById("myCheck").disabled =false;
+document.getElementById("copyButton").disabled =false;
+document.getElementById("colorBox").style.background ="";
+color1 = Math.floor(Math.random() * 256);
+color2 = Math.floor(Math.random() * 256);
+color3 = Math.floor(Math.random() * 256);
+
+const colour = 'rgb(' + color1 + ',' + color2 + ',' + color3 + ')';
+
+document.getElementById("colorBox").style.backgroundColor = colour;
+if (checkBox.checked == true){
+ document.getElementById("hexText").textContent = rgbToHex(color1, color2, color3);
+}
+else{
+document.getElementById("hexText").textContent = `rgb(${color1}, ${color2}, ${color3})`;
+}
+
+
+}
+function gradient()
+{
+document.getElementById("myCheckID").style.display = 'none';
+document.getElementById("currentModeText").style.display = 'none';
+document.getElementById("currentModeTextGradient").style.display = 'block';
+document.getElementById("myCheckID2").style.display = 'inline-block';
+document.getElementById("myCheck2").disabled =false;
+document.getElementById("copyButton").disabled =false;
+document.getElementById("colorBox").style.backgroundColor ="";
+color1 = Math.floor(Math.random() * 256);
+color2 = Math.floor(Math.random() * 256);
+color3 = Math.floor(Math.random() * 256);
+
+color4 = Math.floor(Math.random() * 256);
+color5 = Math.floor(Math.random() * 256);
+color6 = Math.floor(Math.random() * 256);
+
+hexcolor1 = rgbToHex(color1, color2, color3);
+hexcolor2 = rgbToHex(color4, color5, color6);
+
+
+degrees = Math.floor(Math.random() * 361);
+stopPoint = Math.floor(Math.random() * 151 + 51);
+
+
+
+if (checkBox2.checked == true && checkBox3.checked == true) {
+    document.getElementById("colorBox").style.background = `linear-gradient(${degrees}deg, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+    document.getElementById("hexText").textContent = `linear-gradient(${degrees}deg, ${hexcolor1} 0%, ${hexcolor2} ${stopPoint}%)`;
+} else if (checkBox2.checked == true && checkBox3.checked == false) {
+    document.getElementById("colorBox").style.background = `linear-gradient(${degrees}deg, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+    document.getElementById("hexText").textContent = `linear-gradient(${degrees}deg, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+} else if (checkBox2.checked == false && checkBox3.checked == true) {
+    document.getElementById("colorBox").style.background = `radial-gradient(circle, ${hexcolor1} 0%, ${hexcolor2} ${stopPoint}%)`;
+    document.getElementById("hexText").textContent = `radial-gradient(circle, ${hexcolor1} 0%, ${hexcolor2} ${stopPoint}%)`;
+    
+} else {
+document.getElementById("colorBox").style.background = `radial-gradient(circle, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+    document.getElementById("hexText").textContent = `radial-gradient(circle, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+
+
+
+
+}}
+
+function copy() {
+    let x = document.getElementById("colorBox");
+    x.style.marginTop = "100px";
+    x.style.transition = "margin 0.5s";
+	x.style.transition = "0.4s";
+
+    var copyText = document.getElementById("hexText").textContent;
+
+    navigator.clipboard.writeText(copyText)
+        .then(() => {
+            const copyInfoContainer = document.getElementById("copyInfoContainer");
+            copyInfoContainer.style.opacity = 1;
+            document.getElementById("copyInfoText").textContent = "Väri kopioitu.";
+
+            setTimeout(() => {
+                copyInfoContainer.style.opacity = 0;
+            }, 1000);
+
+            const myTimeout = setTimeout(removeCopyText, 1000);
+        })
+        .catch(err => {
+            alert('Kopiointi epäonnistui: ' + err);
+        });
+
+    setTimeout(() => {
+        x.style.marginTop = "55px";
+    }, 1000);
+}
+
+function removeCopyText() {
+    const copyInfoContainer = document.getElementById("copyInfoContainer");
+    copyInfoContainer.style.opacity = 0;
+    document.getElementById("copyInfoText").textContent = "";
+}
+
+
+function toggleColor() {
+    if (checkBox.checked) {
+        document.getElementById("currentModeText").textContent = "HEX";
+        document.getElementById("hexText").textContent = rgbToHex(color1, color2, color3);
+    } else {
+        document.getElementById("currentModeText").textContent = "RGB";
+document.getElementById("hexText").textContent = `rgb(${color1}, ${color2}, ${color3})`;
+    }
+}
+
+function toggleGradient() {
+    if (checkBox2.checked) {
+        document.getElementById("currentGradientText").textContent = "LINEAR";
+    } else {
+        document.getElementById("currentGradientText").textContent = "RADIAL";
+    }
+}
+
+function toggleHexGradient() {
+if (checkBox2.checked == true && checkBox3.checked == true) {
+document.getElementById("currentModeTextGradient").textContent = "HEX";
+    document.getElementById("hexText").textContent = `linear-gradient(${degrees}deg, ${hexcolor1} 0%, ${hexcolor2} ${stopPoint}%)`;
+} else if (checkBox2.checked == true && checkBox3.checked == false) {
+    document.getElementById("currentModeTextGradient").textContent = "RGB";
+    document.getElementById("hexText").textContent = `linear-gradient(${degrees}deg, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+} else if (checkBox2.checked == false && checkBox3.checked == true) {
+document.getElementById("currentModeTextGradient").textContent = "HEX";
+    document.getElementById("hexText").textContent = `radial-gradient(circle, ${hexcolor1} 0%, ${hexcolor2} ${stopPoint}%)`;
+    
+} else {
+    document.getElementById("currentModeTextGradient").textContent = "RGB";
+    document.getElementById("hexText").textContent = `radial-gradient(circle, rgb(${color1}, ${color2}, ${color3}) 0%, rgb(${color4}, ${color5}, ${color6}) ${stopPoint}%)`;
+
+}}
+</script>
+<style>
+body
+{
+text-align:center;
+font-family:helvetica, Arial;
+overflow:hidden;
+
+}
+
+#colorBox
+{
+height:600px;
+padding:25px;
+margin:60px;
+background-color:black;
+background:black;
+display: flex;
+align-items: center;
+justify-content: center;
+transition:0.4s;
+margin-top:55px;
+box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+z-index: -33;
+
+}
+@media only screen and (max-width: 750px) {
+  #colorBox{
+    margin-top:95px;
+  }
+}
+
+
+@media only screen and (max-width: 505px) {
+  button{
+    margin-top:25px;
+  }
+}
+
+button
+{
+background-color:black;
+color:white;
+border:none;
+padding:10px;
+border-radius:10px;
+transition:0.2s;
+box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+
+}
+button:enabled:active
+{
+transform:scale(1.1);
+transition:0.1s;
+transform: translateY(5px);
+background-color:DimGrey;
+}
+button:disabled
+{
+
+background-color:DimGrey;
+cursor:not-allowed;
+
+}
+button:enabled:hover
+{
+transition:0.2s;
+box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input + .slider {
+  background-color: #2196F3;
+}
+input:disabled + .slider {
+  background-color: grey;
+cursor:not-allowed;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+#copyInfoContainer {
+    position: absolute; 
+    left: 50%; 
+	margin-top:30px;
+    transform: translateX(-50%); 
+    transition: opacity 0.5s; 
+    opacity: 0; 
+    pointer-events: none;
+	z-index: -3660;
+
+}
+
+#copyInfoText {
+    transition: opacity 1s;
+}
+
+
+#hexTextContainer {
+    position: absolute;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); 
+    pointer-events: none; 
+	z-index: -3660;
+
+}
+
+</style>
+</body>
+</html>

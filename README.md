@@ -1,6 +1,6 @@
 https://geronimo.okol.org/~joojun/Color/
 
-chatGPT:tä käytettäyvain debuggamiseen
+chatGPT:tä käytetty vain debuggamiseen
 
 ![Näyttökuva 2025-01-20 111005](https://github.com/user-attachments/assets/e1f2f988-51bd-4f36-ae20-89def977ccf3)
 ![Näyttökuva 2025-01-20 111034](https://github.com/user-attachments/assets/d2a9a8ef-4369-4fbf-a7cc-eb7fca40a6dd)
